@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 
 const persons = [
@@ -24,15 +24,29 @@ const persons = [
   },
 ];
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-})
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
-app.get('/api/persons', (req, res) => {
+app.get("/info", (req, res) => {
+  const time = new Date();
+  const html = `<div><p>Phonebook has info for ${persons.length} people</p><p>${time}</p></div>`;
+  res.send(html);
+});
+
+app.get("/api/persons", (req, res) => {
   res.json(persons);
-})
+});
+
+// app.get("/api/persons/:id", (req, res) => {
+//   const id = Number(req.params.id);
+
+//   const person = persons.find((person) => person.id === id);
+
+//   res.json(person);
+// });
 
 const PORT = 3001;
 app.listen(3001, () => {
   console.log(`Example app listening on port ${PORT}`);
-})
+});
