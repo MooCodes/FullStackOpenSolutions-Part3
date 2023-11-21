@@ -1,7 +1,11 @@
 const express = require("express");
 const app = express();
 
+const morgan = require("morgan");
+
 app.use(express.json());
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
   {
@@ -71,8 +75,6 @@ app.post("/api/persons", (req, res) => {
       error: "name must be unique",
     });
   }
-
-  console.log(req.body);
 
   const person = {
     id: Math.round(Math.random() * 1000000),
