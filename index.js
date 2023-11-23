@@ -7,7 +7,7 @@ const Person = require("./models/person");
 const morgan = require("morgan");
 
 app.use(express.json());
-morgan.token("body", (req, res) => JSON.stringify(req.body));
+morgan.token("body", (req) => JSON.stringify(req.body));
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
@@ -72,6 +72,7 @@ app.post("/api/persons", (req, res, next) => {
 app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
     .then((deletedPerson) => {
+      console.log("deleted person", deletedPerson);
       res.status(204).end();
     })
     .catch((error) => next(error));
@@ -85,7 +86,10 @@ app.put("/api/persons/:id", (req, res, next) => {
     number: body.number,
   };
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true })
+  Person.findByIdAndUpdate(req.params.id, person, {
+    new: true,
+    runValidators: true,
+  })
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })
