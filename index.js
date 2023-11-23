@@ -104,6 +104,7 @@ const errorHandler = (error, req, res, next) => {
   next(error);
 };
 
+// always have this as the last middleware
 app.use(errorHandler);
 
 const PORT = process.env.PORT;
