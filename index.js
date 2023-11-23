@@ -95,19 +95,25 @@ app.post("/api/persons", (req, res) => {
   });
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
     .then((deletedPerson) => {
-      console.log('deleted', deletedPerson);
       res.status(204).end();
     })
-    .catch((error) => {
-      console.log(error);
-      res.status(404).end();
-    });
-
-  res.status(204).end();
+    .catch((error) => next(error));
 });
+
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return res.status(400).send({ error: "malformedatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
